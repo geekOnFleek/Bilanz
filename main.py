@@ -140,17 +140,20 @@ class EntryList:
 		self.init_from_json()
 		
 	def init_from_json(self):
-		f = open("ser.json", 'r')
-		in_dict = json.load(f)
-		f.close()
-		self.goal = in_dict['goal']
-		entries = in_dict['entrylist']
-		for e in entries:
-			new_dire = e['type']
-			new_amount = e['amount']
-			new_date = e['date_string']
-			new_comment = e['comment_string']
-			self.entrylist.append(Entry(new_dire, new_amount, new_date, new_comment))
+		try:
+			f = open("ser.json", 'r')
+			in_dict = json.load(f)
+			f.close()
+			self.goal = in_dict['goal']
+			entries = in_dict['entrylist']
+			for e in entries:
+				new_dire = e['type']
+				new_amount = e['amount']
+				new_date = e['date_string']
+				new_comment = e['comment_string']
+				self.entrylist.append(Entry(new_dire, new_amount, new_date, new_comment))
+		except:
+			pass
 
 	def store_in_json(self):
 		serialized_list = []
