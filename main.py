@@ -54,6 +54,15 @@ class GeneralStats(Gtk.Box):
 		self.in_label.set_text("Out:\t\t" + str(incoming) + "€")
 		self.comb_label.set_text("Combined:\t" + str(incoming-outgoing) + "€")
 
+class SpendingsList(Gtk.ListBox):
+	def __init__(self, entry_list):
+		Gtk.Window.__init__(self)
+		self.entry_list = entry_list
+		self.init_elements()	
+	
+	def init_elements(self):
+		for e in self.entry_list.get_entry_boxes():	
+			self.insert(e, -1)
 
 
 class MainWindow(Gtk.Window):
@@ -69,7 +78,7 @@ class MainWindow(Gtk.Window):
 		self.entry_list = entry_list
 		
 		#self.button.connect("clicked", self.on_button_clicked)
-		self.entries = Gtk.ListBox()
+		self.entries = SpendingsList(entry_list)
 		self.top_label = GoalStats()
 		self.general_stats_label = GeneralStats(entry_list)
 		
@@ -118,6 +127,7 @@ class MainWindow(Gtk.Window):
 		new_comment = self.comment_entry.get_text()
 		new_entry = Entry(self.input_type.get_active(), new_amount, new_date, new_comment)
 		self.entry_list.add_entry(new_entry)
+		self.entries = SpendingsList(self.entry_list)
 		print("Added " + str(new_amount) + " to list")
 		self.amount_entry.set_text("")
 		self.date_entry.set_text("")
