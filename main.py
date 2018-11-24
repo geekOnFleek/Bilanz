@@ -1,7 +1,8 @@
+import json
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import json
+
 
 class EntryBox(Gtk.Box):
 	def __init__(self, mode, amount, date):
@@ -18,7 +19,8 @@ class EntryBox(Gtk.Box):
 		date_label = Gtk.Label()
 		date_label.set_markup('<span foreground="#777777">' + date + '</span>')
 		self.pack_end(date_label, False, False, 3)
-			
+
+
 class GoalStats(Gtk.Box):
 	def __init__(self):
 		Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, spacing=5)
@@ -28,6 +30,7 @@ class GoalStats(Gtk.Box):
 		self.pack_start(progbar, False, False , 3)
 		goal_label = Gtk.Label("40% of your monthly goal spent.")
 		self.pack_end(goal_label, False, False, 3)
+
 
 class GeneralStats(Gtk.Box):
 	def __init__(self, entry_list):
@@ -47,6 +50,7 @@ class GeneralStats(Gtk.Box):
 		self.pack_end(self.out_label, False, False, 4)
 		self.pack_end(self.in_label, False, False, 4)
 
+
 	def update(self):
 		incoming = self.entry_list.get_incoming()
 		outgoing = self.entry_list.get_outgoing()
@@ -54,16 +58,15 @@ class GeneralStats(Gtk.Box):
 		self.in_label.set_text("Out:\t\t" + str(incoming) + "€")
 		self.comb_label.set_text("Combined:\t" + str(incoming-outgoing) + "€")
 
-class SpendingsList(Gtk.ListBox):
-	def __init__(self, entry_list):
-		Gtk.Window.__init__(self)
-		self.entry_list = entry_list
-		self.init_elements()	
-	
-	def init_elements(self):
-		for e in self.entry_list.get_entry_boxes():	
-			self.insert(e, -1)
 
+class SpendingsList(Gtk.TreeView):
+    def __init__(self, entry_list):
+        Gtk.TreeView.__init__(self)
+        self.entry_list = entry_list
+        #convert data to ListStore
+        entry_list_store = Gtk.ListStore(float, str, str)
+        for e in entry_list:
+            entry_list_store.append()
 
 class MainWindow(Gtk.Window):
 	
@@ -143,6 +146,7 @@ class Entry:
 		self.date_string = date_string
 		self.comment_string = comment_string
 
+
 class EntryList:
 	def __init__(self):
 		self.entrylist = []
@@ -179,7 +183,7 @@ class EntryList:
 		f = open("ser.json", 'w')
 		json.dump(obj, f)
 		f.close()
-		
+
 
 	def get_incoming(self):
 		result = 0
@@ -203,6 +207,7 @@ class EntryList:
 		for e in self.entrylist:
 			result.append(EntryBox(e.dire, e.amount, e.date_string))
 		return result
+
 
 entries = EntryList()
 
