@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import json
 import gi
 gi.require_version('Gtk', '3.0')
@@ -143,7 +145,6 @@ class MainWindow(Gtk.Window):
         new_comment = self.comment_entry.get_text()
         new_entry = Entry(self.input_type.get_active(), new_amount, new_date, new_comment)
         self.entry_list.add_entry(new_entry)
-        self.entries = SpendingsList(self.entry_list)
         print("Added " + str(new_amount) + " to list")
         self.amount_entry.set_text("")
         self.date_entry.set_text("")
