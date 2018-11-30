@@ -65,16 +65,23 @@ class SpendingsList(Gtk.TreeView):
     def __init__(self, entry_list):
         self.entry_list = entry_list
         # convert data to ListStore
-        entry_list_store = Gtk.ListStore(float, str)
-        for e in entry_list.get_entry_list():
-            entry_list_store.append(e.to_list())
+        self.entry_list_store = Gtk.ListStore(float, str)
+        for e in self.entry_list.get_entry_list():
+            self.entry_list_store.append(e.to_list())
 
-        Gtk.TreeView.__init__(entry_list_store)
+        Gtk.TreeView.__init__(self.entry_list_store)
 
         for i, col_title in enumerate(["amount", "date"]):
             renderer = Gtk.CellRendererText()
             column = Gtk.TreeViewColumn(col_title, renderer)
             self.append_column(column)
+
+    def update(self):
+        self.entry_list_store.clear()
+        for e in self.entry_list.get_entry_list():
+            self.entry_list_store.append(e.to_list())
+
+        self.set_model(self.entry_list_store)
 
 
 
@@ -145,6 +152,10 @@ class MainWindow(Gtk.Window):
         new_comment = self.comment_entry.get_text()
         new_entry = Entry(self.input_type.get_active(), new_amount, new_date, new_comment)
         self.entry_list.add_entry(new_entry)
+        entry_list_store = Gtk.ListStore(float, str)
+        for e in self.entry_list.get_entry_list():
+            entry_list_store.append(e.to_list())
+        self.entries.set_model(entry_list_store)
         print("Added " + str(new_amount) + " to list")
         self.amount_entry.set_text("")
         self.date_entry.set_text("")
